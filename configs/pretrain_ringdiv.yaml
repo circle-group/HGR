@@ -1,0 +1,88 @@
+# Internal experiment configuration.
+# Corresponding checkpoint: ringdiv_step50000.pth
+exp_name: FMpretrain
+
+data:
+  name: ringdiv
+  dir: "$DATA_ROOT/ringdiv"
+  num_workers: 168
+  chunksize: 1
+  grammar_workers: 168
+  grammar_chunksize: 1
+  cache_size: 10000
+
+train:
+  lr: 0.001
+  wd: 0.001
+  loss_fn: sce
+  mask_rate: 0.25
+  mask_edge: 0
+  batch_size: 512
+  total_steps: 100000
+  max_path_distance: 3
+  num_workers_loader: 48
+  eval_every_steps: 5000
+  save_every_steps: 1000
+
+amp:
+  enabled: true
+  dtype: bf16
+  tf32: true
+
+input_model_file: null
+seed: 42
+
+modalities:
+  - graph
+  - grammar
+
+grammar:
+  type: RSG
+  vocab_path: "$DATA_ROOT/ringdiv300k/ringdiv300k_vocab_1000.txt"
+  grammar_path: "$DATA_ROOT/ringdiv/processed/grammar_RSG6583_ringdiv(251012-16:1209).pklz"
+  rules_path: "$DATA_ROOT/ringdiv/processed/rules_collated_RSG6583_ringdiv(251012-16:1209).pt"
+  emb_dim: 512
+  nhead: 8
+  num_layers: 4
+  dropout: 0.1
+  wl_iterations: 3
+
+pretexts:
+  - node
+  - descriptors
+  - subgraph
+  - conf
+
+tasks:
+  emb_dim: 512
+  sigreg:
+    lambda: 0.05
+    num_slices: 1024
+  node:
+    lambda: 4.5
+    num_layer: 1
+    out_dim: 119
+    JK: last
+    gnn_type: gin
+    lr: 0.001
+    wd: 0.001
+  descriptors:
+    lambda: 1.0
+    dropout: 0.2
+    lr: 0.001
+    wd: 0.001
+  subgraph:
+    names:
+      - maccs
+      - morgan
+    dropout: 0.2
+    lambda: 5.0
+    label_smoothing: 0.05
+    lr: 0.001
+    wd: 0.001
+  conf:
+    out_dim: 256
+    lambda: 0.04
+    dropout: 0.2
+    lr: 0.001
+    wd: 0.001

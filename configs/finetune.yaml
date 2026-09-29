@@ -1,0 +1,79 @@
+# config.yaml
+exp_name: FM_finetune
+data:
+  name: bace # bace, clintox, bbbp, sider, tox21, toxcast, hiv 
+  grammar_workers: 128 # 重建规则的进程数
+  cache_size: 10000
+  # dir: "$DATA_ROOT/bbbp"
+  chunksize: 1
+
+amp:
+  enabled: true
+  dtype: bf16
+
+modalities:
+  - graph
+  - grammar
+
+
+grammar:
+  is_finetune: true # use deterministic rule embeddings during downstream transfer
+  type: 'RSG'
+  # force_rebuild_rules: True # 置 true 则每次都会重建 rules（一般不需要）
+  vocab_path: "$DATA_ROOT/ringdiv300k/ringdiv300k_vocab_1000.txt"
+  # finetune时会在pretrain基础上构造grammar，构造完成后会生成新的grammar
+  pretrain_grammar_path: "$DATA_ROOT/zinc2m/processed/grammar_RSG825_zinc2m(251011-20:4658).pklz"
+  # pretrain_grammar_path: "$DATA_ROOT/ringdiv/processed/grammar_RSG6583_ringdiv(251012-16:1209).pklz"
+  # pretrain_grammar_path: "$DATA_ROOT/ringdiv_zinc2m/grammar_RSG6729_ringdiv+zinc2m.pklz"
+  emb_dim: 512 #16 # 512
+  nhead: 8 # 8
+  num_layers: 4 #5
+  dropout: 0.3
+  wl_iterations: 3
+  rule_emb_dim: 16 # 规则额外嵌入维度
+  # rule_emb_mode:  linear # linear, jl, softdict, hybrid
+
+train:
+  ft_type: full # full fine-tuning; use --ft-type freeze for linear probing
+  epochs: 100
+  num_workers_loader: 24            # number of workers for dataset loading
+  eval_train: true          # evaluating training or not
+  split: scaffold           # dataset split type: random / scaffold / random_scaffold
+  max_path_distance: 3 # for graphormer-style attn bias
+  batch_size: 32
+  decay: 0.0 #0.0001
+  ema_decay: 0.9999
+  lr: 0.002 # probe learning rate
+  enc_lr_ratio: 0.1 # encoder相对于lr的缩放比例
+  probe_eta_min: 0.1
+  enc_eta_min: 0.2 
+  warmup_ratio: 0.2 #0.1 # warmup ratio
+  patience: 10
+
+# Internal alternatives:
+# pretrain_ckpt: "$CKPT_ROOT/ringdiv/ringdiv_step50000.pth"
+# pretrain_ckpt: "$CKPT_ROOT/ringdiv+zinc2m/ringdiv_zinc2m_step50000.pth"
+pretrain_ckpt: "$CKPT_ROOT/zinc2m/zinc2m_step50000.pth"
+
+
+
+# graph_encoder:
+#   num_layers: 3 # 3
+#   emb_dim: 512 # 512
+#   JK: "last"
+#   dropout: 0.2
+#   gnn_type: "gin"
+
+
+  
+  
+
+
+
+
+
+
+# addition
+data_seed: 42             # seed for splitting the dataset
+# seed_list: [0, 21, 42, 123, 1024]    # list of seeds for experiments
+seed_list: [0, 21, 42]

@@ -1,0 +1,65 @@
+# Corresponding local checkpoint: ringdiv300k/gvae-RSG-recon31.196-kld29.270-tot39.888-fcd1.6654-e44_izasbanw (260416-051638).pth
+exp_name: ringdiv300k_gvae_rsg_tfenc
+seed: 123
+
+wandb:
+  project: HGR-gvae-tfenc
+
+data:
+  name: ringdiv300k
+  max_vol: 137
+  padding_idx: -1
+
+gvae:
+  type: GVAE
+  latent_dim: 256
+  max_vol: 137
+  bs: 512
+  padding_idx: -1
+  rule_embed_dim: 768
+  start_rule_embedding: false
+  use_nt_conditioning: true
+  dropout: 0.05
+  rule_init:
+    mode: hybrid_struct
+    wl_iterations: 3
+    freeze_feature_bank: true
+  encoder_params:
+    name: Transformer
+    hidden_dim: 512
+    num_layers: 4
+    num_heads: 16
+    ff_mult: 4
+    bidirectional: false
+  decoder_params:
+    name: GRU
+    hidden_dim: 768
+    num_layers: 4
+
+train:
+  n_iters: 300
+  beta: 0.7
+  anneal_steps: 1000
+  fix_steps: 100
+  earlystopping:
+    start: 10
+    patience: 6
+  optimizer: adamw
+  lr: 0.0005947306993612246
+  lr_decay: 1
+  weight_decay: 1.5578687139851175e-5
+  warmup: 6000
+  grad_clip: 1.0
+  eps: 1.0e-8
+
+eval:
+  decode_batch_size: 128
+
+grammar:
+  type: "RSG"
+  vocab_len: 1000
+
+path:
+  vocab_path: "ringdiv300k_vocab_1000.txt"
+  grammar_path: "RSG6205_ringdiv300k.pklz"
+  gvae_ckpt_path: null

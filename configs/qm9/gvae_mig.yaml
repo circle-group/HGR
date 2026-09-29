@@ -1,0 +1,67 @@
+# Corresponding local checkpoint: qm9/gvae-MIG-recon3.521-kld12.414-tot9.246-fcd0.4179-e35_ghua3rh5 (260419-185452).pth
+exp_name: qm9_gvae_mig_tfenc
+seed: 123
+
+wandb:
+  project: HGR-gvae-tfenc
+
+data:
+  name: qm9
+  max_vol: 17
+  padding_idx: -1
+
+gvae:
+  type: GVAE
+  latent_dim: 192
+  max_vol: 17
+  bs: 512
+  padding_idx: -1
+  rule_embed_dim: 256
+  start_rule_embedding: false
+  use_nt_conditioning: false
+  dropout: 0.1
+  rule_init:
+    mode: hybrid_struct
+    wl_iterations: 3
+    freeze_feature_bank: true
+  encoder_params:
+    name: Transformer
+    hidden_dim: 128
+    num_layers: 3
+    num_heads: 8
+    ff_mult: 4
+    bidirectional: false
+  decoder_params:
+    name: GRU
+    hidden_dim: 384
+    num_layers: 2
+
+train:
+  n_iters: 100
+  beta: 0.5
+  anneal_steps: 1000
+  fix_steps: 300
+  earlystopping:
+    start: 10
+    patience: 6
+  optimizer: adamw
+  lr: 0.00044058963709410714
+  lr_decay: 0.999
+  weight_decay: 0.0003004134569379179
+  warmup: 2000
+  grad_clip: 1.0
+  eps: 1e-8
+
+eval:
+  decode_batch_size: 128
+
+grammar:
+  type: "MIG"
+  vocab_len: 500
+
+path:
+  raw_data: 'raw/qm9_property.csv'
+  valid_idx: 'raw/valid_idx_qm9.json'
+  vocab_path: "qm9_vocab_500.txt"
+  grammar_path: "MIG510_qm9.pklz"
+  gvae_ckpt_path: null

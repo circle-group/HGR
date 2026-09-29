@@ -1,0 +1,67 @@
+# Corresponding local checkpoint: qm9/gvae-RSG-recon3.305-kld14.763-tot10.687-fcd0.4021-e42_di7bu3aa (260417-095610).pth
+exp_name: qm9_gvae_rsg_tfenc
+seed: 123
+
+wandb:
+  project: HGR-gvae-tfenc
+
+data:
+  name: qm9
+  max_vol: 17
+  padding_idx: -1
+
+gvae:
+  type: GVAE
+  latent_dim: 32
+  max_vol: 17
+  bs: 1024
+  padding_idx: -1
+  rule_embed_dim: 64
+  start_rule_embedding: false
+  use_nt_conditioning: false
+  dropout: 0.05
+  rule_init:
+    mode: hybrid_struct
+    wl_iterations: 3
+    freeze_feature_bank: true
+  encoder_params:
+    name: Transformer
+    hidden_dim: 384
+    num_layers: 3
+    num_heads: 8
+    ff_mult: 2
+    bidirectional: false
+  decoder_params:
+    name: GRU
+    hidden_dim: 384
+    num_layers: 3
+
+train:
+  n_iters: 100
+  beta: 0.5
+  anneal_steps: 300
+  fix_steps: 300
+  earlystopping:
+    start: 10
+    patience: 6
+  optimizer: adamw
+  lr: 0.001786560214055526
+  lr_decay: 1.0
+  weight_decay: 0.0001582382654685813
+  warmup: 2000
+  grad_clip: 1.0
+  eps: 1e-8
+
+eval:
+  decode_batch_size: 128
+
+grammar:
+  type: "RSG"
+  vocab_len: 500
+
+path:
+  raw_data: 'raw/qm9_property.csv'
+  valid_idx: 'raw/valid_idx_qm9.json'
+  vocab_path: "qm9_vocab_500.txt"
+  grammar_path: "RSG280_qm9.pklz"
+  gvae_ckpt_path: null

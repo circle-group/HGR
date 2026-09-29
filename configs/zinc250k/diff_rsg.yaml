@@ -1,0 +1,75 @@
+exp_name: zinc250k_diff_rsg_dit_tfenc
+seed: 123
+
+data:
+  name: zinc250k
+  max_vol: 72
+  padding_idx: -1
+
+train:
+  num_epochs: 300
+  earlystopping:
+    start: 6
+    patience: 8
+  bs: 512
+  snapshot_freq: 1
+  snapshot_sampling: True
+  optimizer: adamw
+  reduce_mean: False
+  lr: 0.0017640337652882036
+  lr_decay: 0.99
+  weight_decay: 1.7930234078719337e-7
+  warmup: 1000
+  grad_clip: 2.0
+  ema_decay: 0.999
+  eps: 1e-8
+
+scorenet:
+  type: ScoreDiT
+  latent_dim: 256
+  hidden_dim: 768
+  dropout: 0.1
+  input_layer_norm: true
+  use_skip_proj: true
+  num_layers: 8
+  num_heads: 4
+  seq_len: 8
+  ff_mult: 4
+  time_cond_dim: 512
+
+sde:
+  type: VPSDE
+  num_scales: 1000
+  schedule: linear
+  beta_min: 0.07633861258892802
+  beta_max: 8.790977348512893
+
+sample:
+  method: pc
+  predictor: Euler
+  corrector: None
+  probability_flow: False
+  noise_removal: True
+  n_steps: 2
+  snr: 0.1
+  scale_eps: 0.1
+
+eval:
+  batch_size: 1024
+  num_samples: 1000
+  workers: 24
+  metrics: zinc250k
+
+path:
+  vocab_len: 500
+  vocab_path: zinc250k_vocab_500.txt
+  grammar_path: RSG403_zinc250k.pklz
+  raw_data: 'raw/zinc250k_property.csv'
+  valid_idx: 'raw/valid_idx_zinc250k.json'
+  gvae_ckpt_use_manifest: false
+  gvae_ckpt_path: "zinc250k/gvae-RSG-recon11.050-kld38.283-tot14.261-fcd1.9839-e56_32qhmh96 (260419-023507).pth"
+  latent_cache_mode: mu
+  latent_preprocess: standardize
+  latent_preprocess_eps: 1.0e-6
+  latent_cache_version: v2
+  scorenet_ckpt_path: "zinc250k/ScoreNet-RSG-ns0.00098-fcd1.6754-val1.0000(260419-170253-34).pt"

@@ -1,0 +1,76 @@
+exp_name: guacamol_diff_rsg_dit_tfenc
+seed: 123
+
+wandb:
+  project: HGR-diff-guacamol
+
+data:
+  name: guacamol
+  max_vol: 175
+  padding_idx: -1
+
+train:
+  num_epochs: 300
+  earlystopping:
+    start: 6
+    patience: 8
+  bs: 512
+  snapshot_freq: 1
+  snapshot_sampling: True
+  optimizer: adamw
+  reduce_mean: False
+  lr: 0.0007855217899655167
+  lr_decay: 0.99
+  weight_decay: 2.626544405921109e-7
+  warmup: 1000
+  grad_clip: 0.5
+  ema_decay: 0.999
+  eps: 1e-8
+
+scorenet:
+  type: ScoreDiT
+  latent_dim: 768
+  hidden_dim: 1024
+  dropout: 0.1
+  input_layer_norm: true
+  use_skip_proj: true
+  num_layers: 6
+  num_heads: 16
+  seq_len: 8
+  ff_mult: 2
+  time_cond_dim: 384
+
+sde:
+  type: VPSDE
+  num_scales: 500
+  schedule: linear
+  beta_min: 0.09342162151619268
+  beta_max: 9.602406814288724
+
+sample:
+  method: pc
+  predictor: Euler
+  corrector: None
+  probability_flow: False
+  noise_removal: True
+  n_steps: 2
+  snr: 0.1
+  scale_eps: 0.1
+
+eval:
+  batch_size: 1024
+  num_samples: 1000
+  workers: 24
+  metrics: guacamol
+
+path:
+  vocab_len: 1000
+  vocab_path: ringdiv300k_vocab_1000.txt
+  grammar_path: RSG2385_guacamol.pklz
+  gvae_ckpt_use_manifest: false
+  gvae_ckpt_path: "guacamol/gvae-v4-recon15.056-kld28.455-tot26.415-fcd2.3818-e84_3ycztv0j (260417-000214).pth"
+  latent_cache_mode: mu
+  latent_preprocess: standardize
+  latent_preprocess_eps: 1.0e-6
+  latent_cache_version: v2
+  scorenet_ckpt_path: "guacamol/ScoreNet-fcd2.2329-val1.0000(260614-100824-34).pt"

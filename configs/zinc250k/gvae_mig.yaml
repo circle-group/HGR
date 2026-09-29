@@ -1,0 +1,67 @@
+# Corresponding local checkpoint: zinc250k/gvae-MIG-recon14.846-kld25.839-tot15.638-fcd1.8087-e80_sslcjayg (260419-191802).pth
+exp_name: zinc250k_gvae_mig_tfenc
+seed: 123
+
+wandb:
+  project: HGR-gvae-tfenc
+
+data:
+  name: zinc250k
+  max_vol: 71
+  padding_idx: -1
+
+gvae:
+  type: GVAE
+  latent_dim: 128
+  max_vol: 71
+  bs: 512
+  padding_idx: -1
+  rule_embed_dim: 256
+  start_rule_embedding: false
+  use_nt_conditioning: false
+  dropout: 0.1
+  rule_init:
+    mode: hybrid_struct
+    wl_iterations: 3
+    freeze_feature_bank: true
+  encoder_params:
+    name: Transformer
+    hidden_dim: 384
+    num_layers: 4
+    num_heads: 4
+    ff_mult: 4
+    bidirectional: false
+  decoder_params:
+    name: GRU
+    hidden_dim: 512
+    num_layers: 3
+
+train:
+  n_iters: 200
+  beta: 0.7
+  anneal_steps: 1000
+  fix_steps: 300
+  earlystopping:
+    start: 10
+    patience: 6
+  optimizer: adamw
+  lr: 0.000462509605884256
+  lr_decay: 0.9999
+  weight_decay: 1.5825504060749823e-5
+  warmup: 8000
+  grad_clip: 1.0
+  eps: 1e-8
+
+eval:
+  decode_batch_size: 128
+
+grammar:
+  type: "MIG"
+  vocab_len: 500
+
+path:
+  raw_data: 'raw/zinc250k_property.csv'
+  valid_idx: 'raw/valid_idx_zinc250k.json'
+  vocab_path: "zinc250k_vocab_500.txt"
+  grammar_path: "MIG557_zinc250k.pklz"
+  gvae_ckpt_path: null

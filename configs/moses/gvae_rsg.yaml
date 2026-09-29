@@ -1,0 +1,68 @@
+# Corresponding local checkpoint: moses/gvae-RSG-recon7.767-kld22.485-tot10.944-fcd1.7700-e35_6w40xfn0 (260417-125741).pth
+exp_name: moses_gvae_rsg_tfenc
+seed: 123
+
+wandb:
+  project: HGR-gvae-tfenc
+
+data:
+  name: moses
+  max_vol: 52
+  padding_idx: -1
+
+gvae:
+  type: GVAE
+  latent_dim: 256
+  max_vol: 52
+  bs: 1024
+  padding_idx: -1
+  rule_embed_dim: 512
+  start_rule_embedding: false
+  use_nt_conditioning: false
+  dropout: 0.05
+  rule_init:
+    mode: hybrid_struct
+    wl_iterations: 3
+    freeze_feature_bank: true
+  encoder_params:
+    name: Transformer
+    hidden_dim: 512
+    num_layers: 4
+    num_heads: 16
+    ff_mult: 2
+    bidirectional: false
+  decoder_params:
+    name: GRU
+    hidden_dim: 512
+    num_layers: 4
+
+train:
+  n_iters: 200
+  beta: 0.5
+  anneal_steps: 500
+  fix_steps: 500
+  earlystopping:
+    start: 10
+    patience: 6
+  optimizer: adamw
+  lr: 0.000326437862011655
+  lr_decay: 0.999
+  weight_decay: 0.0005680482016628299
+  warmup: 6000
+  grad_clip: 1.0
+  eps: 1e-8
+
+eval:
+  decode_batch_size: 128
+
+grammar:
+  type: "RSG"
+  vocab_len: 1000
+
+path:
+  raw_data:
+    train: 'raw/moses_train.smiles'
+    test: 'raw/moses_test_scaffolds.smiles'
+  vocab_path: "ringdiv300k_vocab_1000.txt"
+  grammar_path: "RSG320_moses.pklz"
+  gvae_ckpt_path: null

@@ -1,0 +1,67 @@
+# Corresponding local checkpoint: zinc250k/gvae-RSG-recon11.050-kld38.283-tot14.261-fcd1.9839-e56_32qhmh96 (260419-023507).pth
+exp_name: zinc250k_gvae_rsg_tfenc
+seed: 123
+
+wandb:
+  project: HGR-gvae-tfenc
+
+data:
+  name: zinc250k
+  max_vol: 72
+  padding_idx: -1
+
+gvae:
+  type: GVAE
+  latent_dim: 256
+  max_vol: 72
+  bs: 512
+  padding_idx: -1
+  rule_embed_dim: 256
+  start_rule_embedding: false
+  use_nt_conditioning: true
+  dropout: 0.05
+  rule_init:
+    mode: hybrid_struct
+    wl_iterations: 3
+    freeze_feature_bank: true
+  encoder_params:
+    name: Transformer
+    hidden_dim: 512
+    num_layers: 5
+    num_heads: 8
+    ff_mult: 1
+    bidirectional: false
+  decoder_params:
+    name: GRU
+    hidden_dim: 768
+    num_layers: 4
+
+train:
+  n_iters: 200
+  beta: 0.5
+  anneal_steps: 1000
+  fix_steps: 300
+  earlystopping:
+    start: 10
+    patience: 6
+  optimizer: adamw
+  lr: 0.0004635455569965105
+  lr_decay: 0.999
+  weight_decay: 0.003947477097203281
+  warmup: 8000
+  grad_clip: 1.0
+  eps: 1e-8
+
+eval:
+  decode_batch_size: 128
+
+grammar:
+  type: "RSG"
+  vocab_len: 500
+
+path:
+  raw_data: 'raw/zinc250k_property.csv'
+  valid_idx: 'raw/valid_idx_zinc250k.json'
+  vocab_path: "zinc250k_vocab_500.txt"
+  grammar_path: "RSG403_zinc250k.pklz"
+  gvae_ckpt_path: null

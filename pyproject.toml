@@ -1,0 +1,29 @@
+[build-system]
+requires = ["setuptools>=68", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "HGR"
+version = "0.1.0"
+description = "Higher-order molecular grammars for generative and foundation models in chemistry"
+readme = "README.md"
+requires-python = ">=3.9"
+dependencies = [
+    "easydict>=1.10",
+    "matplotlib>=3.6",
+    "networkx>=2.8",
+    "numpy>=1.23,<3",
+    "pandas>=1.5",
+    "Pillow>=9",
+    "PyYAML>=6",
+    "rdkit>=2025.3.5",
+    "scikit-learn>=1.2",
+    "torch>=2.0",
+    "torch-geometric>=2.3",
+    "tqdm>=4.64",
+    "wandb>=0.15",
+]
+
+[tool.setuptools.packages.find]
+include = ["hgr*"]
+namespaces = true

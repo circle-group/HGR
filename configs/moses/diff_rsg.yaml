@@ -1,0 +1,73 @@
+exp_name: moses_diff_rsg_dit_tfenc
+seed: 123
+
+data:
+  name: moses
+  max_vol: 52
+  padding_idx: -1
+
+train:
+  num_epochs: 300
+  earlystopping:
+    start: 6
+    patience: 8
+  bs: 512
+  snapshot_freq: 1
+  snapshot_sampling: True
+  optimizer: adamw
+  reduce_mean: False
+  lr: 8.211669388165995e-5
+  lr_decay: 0.95
+  weight_decay: 2.2136785016052432e-8
+  warmup: 1000
+  grad_clip: 2.0
+  ema_decay: 0.999
+  eps: 1e-8
+
+scorenet:
+  type: ScoreDiT
+  latent_dim: 256
+  hidden_dim: 512
+  dropout: 0.05
+  input_layer_norm: true
+  use_skip_proj: true
+  num_layers: 8
+  num_heads: 8
+  seq_len: 32
+  ff_mult: 4
+  time_cond_dim: 512
+
+sde:
+  type: VPSDE
+  num_scales: 1000
+  schedule: linear
+  beta_min: 0.04810572731225811
+  beta_max: 25.492465691936836
+
+sample:
+  method: pc
+  predictor: Euler
+  corrector: None
+  probability_flow: False
+  noise_removal: True
+  n_steps: 2
+  snr: 0.1
+  scale_eps: 0.1
+
+eval:
+  batch_size: 1024
+  num_samples: 1000
+  workers: 24
+  metrics: moses
+
+path:
+  vocab_len: 1000
+  vocab_path: ringdiv300k_vocab_1000.txt
+  grammar_path: RSG320_moses.pklz
+  gvae_ckpt_use_manifest: false
+  gvae_ckpt_path: "moses/gvae-RSG-recon7.767-kld22.485-tot10.944-fcd1.7700-e35_6w40xfn0 (260417-125741).pth"
+  latent_cache_mode: mu
+  latent_preprocess: standardize
+  latent_preprocess_eps: 1.0e-6
+  latent_cache_version: v2
+  scorenet_ckpt_path: "moses/ScoreNet-fcd1.7186-val1.0000(260419-230153-16).pt"
