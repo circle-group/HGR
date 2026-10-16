@@ -1,0 +1,4 @@
+# Saved notebook runtime: Python 3.13.2, RDKit 2025.09.1.
+# pandas pin is for this extracted tool, NOT a recovered historical version.
+rdkit==2025.9.1
+pandas==2.2.3

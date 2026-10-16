@@ -6,17 +6,26 @@ their terms. Place inputs under `$ASSET_ROOT/datasets/` as follows.
 
 | Dataset | Files under `datasets/` |
 |---|---|
-| RingDiv / RingDiv300k | `ringdiv/raw/ringdiv_property.csv`, `ringdiv/raw/ringdiv_test_idx.npz`; corresponding `ringdiv300k` files |
+| RingDiv | `ringdiv/raw/ringdiv_property.csv`, `ringdiv/raw/ringdiv_test_idx.npz` |
+| RingDiv300k | `ringdiv300k/raw/ringdiv300k_property.csv`, `ringdiv300k/raw/ringdiv300k_test_idx.npz` |
 | QM9 | `qm9/raw/qm9_property.csv`, `qm9/raw/valid_idx_qm9.json` |
 | ZINC250k | `zinc250k/raw/zinc250k_property.csv`, `zinc250k/raw/valid_idx_zinc250k.json` |
 | MOSES | `moses/raw/moses_train.smiles`, `moses/raw/moses_test_scaffolds.smiles` |
 | GuacaMol | `guacamol/raw/new_train.smiles`, `guacamol/raw/new_test.smiles` |
-| BBBP / BACE / ClinTox / SIDER | `bbbp/raw/BBBP.csv`, `bace/raw/bace.csv`, `clintox/raw/clintox.csv`, `sider/raw/sider.csv` |
-| Tox21 / ToxCast / HIV | `tox21/raw/tox21.csv`, `toxcast/raw/toxcast_data.csv`, `hiv/raw/HIV.csv` |
+| BBBP | `bbbp/raw/BBBP.csv` |
+| BACE | `bace/raw/bace.csv` |
+| ClinTox | `clintox/raw/clintox.csv` |
+| SIDER | `sider/raw/sider.csv` |
+| Tox21 | `tox21/raw/tox21.csv` |
+| ToxCast | `toxcast/raw/toxcast_data.csv` |
+| HIV | `hiv/raw/HIV.csv` |
 | ZINC2m | `zinc2m/raw/zinc2m_property.csv` (single `SMILES` column) |
 
 Raw datasets are not included in Git. Original downloads may require the
 preprocessing described in the paper; no automated download pipeline is provided.
+
+See [RingDiv preprocessing](curation/README.md) for cleaning and deduplicating
+an assembled molecular CSV.
 
 Keep CSV row order and supplied split files unchanged. RingDiv NPZ `test_idx`
 values are zero-based row positions excluding the header; training uses the

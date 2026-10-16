@@ -15,6 +15,11 @@ dist/
 /datasets/*
 !/datasets/README.md
 !/datasets/README.txt
+!/datasets/curation/
+/datasets/curation/*
+!/datasets/curation/README.md
+!/datasets/curation/requirements.txt
+!/datasets/curation/preprocess.py
 /checkpoints/
 /results/*
 !/results/guacamol_rsg_ldf_seed42.smi
@@ -44,3 +49,10 @@ dist/
 # Audited package data are committed explicitly despite broad binary/data rules.
 !ringdiv/src/ringdiv/statics/**/*.csv
 !ringdiv/src/ringdiv/statics/**/*.pkl.gz
+
+# Tests are maintained in the internal HGR repository.
+tests/
+test/
+test_*.py
+*_test.py
+conftest.py
